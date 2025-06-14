@@ -4,6 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// Suppress ResizeObserver loop limit exceeded errors
+const resizeObserverErrorHandler = (e) => {
+  if (e.message === 'ResizeObserver loop limit exceeded') {
+    e.stopImmediatePropagation();
+    return false;
+  }
+};
+
+window.addEventListener('error', resizeObserverErrorHandler);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
