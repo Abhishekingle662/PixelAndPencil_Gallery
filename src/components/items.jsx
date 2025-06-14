@@ -9,107 +9,97 @@ export default function App() {
   const [isImagesOpen, setIsImagesOpen] = useState(true);
   const [isVideosOpen, setIsVideosOpen] = useState(true);
   const [isArtworkOpen, setIsArtworkOpen] = useState(true);  useEffect(() => {
-    // Scroll to top immediately
-    window.scrollTo(0, 0);
-    
-    // Also add window load event listener to ensure scroll happens after everything loads
-    const handleLoad = () => {
+    // Only scroll to top if not a hash navigation or popstate
+    if (window.location.hash === '' && window.history.state === null) {
       window.scrollTo(0, 0);
-    };
-    
-    window.addEventListener('load', handleLoad);
-    
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
     loadImages();
     loadVideos();
     loadArtwork();
-    
-    // Cleanup event listener
-    return () => {
-      window.removeEventListener('load', handleLoad);
-    };
   }, []);
-
   const loadImages = () => {
     console.log('Loading Images...');
     const imageUrls = [
-      { src: 'assets/images/island.png', title: 'Island Scene' },
-      { src: 'assets/images/cloth.png', title: 'Cloth Simulation' },
-      { src: 'assets/images/dasd.png', title: 'Abstract Design' },
-      { src: 'assets/images/donut.png', title: 'Donut Render' },
-      { src: 'assets/images/ff.png', title: 'Fire Effect' },
-      { src: 'assets/images/fg.png', title: 'Gradient Study' },
-      { src: 'assets/images/fire+smoke.png', title: 'Fire & Smoke' },
-      { src: 'assets/images/fluid.png', title: 'Fluid Simulation' },
-      { src: 'assets/images/gradient fire.png', title: 'Gradient Fire' },
-      { src: 'assets/images/gradient fire1.png', title: 'Gradient Fire 1' },
-      { src: 'assets/images/gradient fire2.png', title: 'Gradient Fire 2' },
-      { src: 'assets/images/gradient fire5.png', title: 'Gradient Fire 5' },
-      { src: 'assets/images/mounatin.png', title: 'Mountain Landscape' },
-      { src: 'assets/images/planet.png', title: 'Planet Render' },
-      { src: 'assets/images/sd.png', title: 'Scene Design' },
-      { src: 'assets/images/sdfff.png', title: 'Abstract Scene' },
-      { src: 'assets/images/untited.png', title: 'Untitled Render' },
-      { src: 'assets/images/untitled.png', title: 'Untitled Design' },
-      { src: 'assets/images/untitlesdfsfd.png', title: 'Creative Study' },
-      { src: 'assets/images/untitlsdfed.png', title: 'Experimental Render' },
-      { src: 'assets/images/untitvbled.png', title: 'Artistic Creation' }
+      { src: '/assets/images/island.png', title: 'Island Scene' },
+      { src: '/assets/images/cloth.png', title: 'Cloth Simulation' },
+      { src: '/assets/images/dasd.png', title: 'Abstract Design' },
+      { src: '/assets/images/donut.png', title: 'Donut Render' },
+      { src: '/assets/images/ff.png', title: 'Fire Effect' },
+      { src: '/assets/images/fg.png', title: 'Gradient Study' },
+      { src: '/assets/images/fire+smoke.png', title: 'Fire & Smoke' },
+      { src: '/assets/images/fluid.png', title: 'Fluid Simulation' },
+      { src: '/assets/images/gradient fire.png', title: 'Gradient Fire' },
+      { src: '/assets/images/gradient fire1.png', title: 'Gradient Fire 1' },
+      { src: '/assets/images/gradient fire2.png', title: 'Gradient Fire 2' },
+      { src: '/assets/images/gradient fire5.png', title: 'Gradient Fire 5' },
+      { src: '/assets/images/mounatin.png', title: 'Mountain Landscape' },
+      { src: '/assets/images/planet.png', title: 'Planet Render' },
+      { src: '/assets/images/sd.png', title: 'Scene Design' },
+      { src: '/assets/images/sdfff.png', title: 'Abstract Scene' },
+      { src: '/assets/images/untited.png', title: 'Untitled Render' },
+      { src: '/assets/images/untitled.png', title: 'Untitled Design' },
+      { src: '/assets/images/untitlesdfsfd.png', title: 'Creative Study' },
+      { src: '/assets/images/untitlsdfed.png', title: 'Experimental Render' },
+      { src: '/assets/images/untitvbled.png', title: 'Artistic Creation' }
     ];
     setImages(imageUrls);
-  };  const loadVideos = () => {
+  };const loadVideos = () => {
     console.log('Loading Videos...');
     const videoUrls = [
-      { src: 'assets/Animation/looping animation.mp4', title: 'Looping Animation' },
-      { src: 'assets/Animation/fish0001-0080.mp4', title: 'Fish Animation' },
-      { src: 'assets/Animation/cube/cube.mp4', title: 'Cube Animation' },
-      { src: 'assets/Animation/Cloth/Cloth simulation cycles.mp4', title: 'Cloth Simulation Cycles' },
-      { src: 'assets/Animation/Cloth/Cloth simulation evee.mp4', title: 'Cloth Simulation Eevee' },
-      { src: 'assets/Animation/Fire/fire animationnn0001-0150.mp4', title: 'Fire Animation' },
-      { src: 'assets/Animation/Fire/fire.mp4', title: 'Fire Effect' },
-      { src: 'assets/Animation/Fire/gradient __fire0001-0100.mp4', title: 'Gradient Fire' },
-      { src: 'assets/Animation/Fluid/Fluid simulation.mp4', title: 'Fluid Simulation' },
-      { src: 'assets/Animation/Fluid/Fluidd0001-0150.mp4', title: 'Advanced Fluid' },
-      { src: 'assets/Animation/New Folder/01.mp4', title: 'New Animation' },
-      { src: 'assets/Animation/rings.mp4', title: 'Rings Animation' },
-      { src: 'assets/Animation/Smoke/fire_smoke2.mp4', title: 'Fire & Smoke 2' },
-      { src: 'assets/Animation/Smoke/smokeFire.mp4', title: 'Smoke Fire' },
-      { src: 'assets/Animation/Smoke/0001-0120.mp4', title: 'Smoke Study' },
-      { src: 'assets/Animation/floating_cube.mkv', title: 'Floating Cube' }
+      { src: '/assets/Animation/looping animation.mp4', title: 'Looping Animation' },
+      { src: '/assets/Animation/fish0001-0080.mp4', title: 'Fish Animation' },
+      { src: '/assets/Animation/cube/cube.mp4', title: 'Cube Animation' },
+      { src: '/assets/Animation/Cloth/Cloth simulation cycles.mp4', title: 'Cloth Simulation Cycles' },
+      { src: '/assets/Animation/Cloth/Cloth simulation evee.mp4', title: 'Cloth Simulation Eevee' },
+      { src: '/assets/Animation/Fire/fire animationnn0001-0150.mp4', title: 'Fire Animation' },
+      { src: '/assets/Animation/Fire/fire.mp4', title: 'Fire Effect' },
+      { src: '/assets/Animation/Fire/gradient __fire0001-0100.mp4', title: 'Gradient Fire' },
+      { src: '/assets/Animation/Fluid/Fluid simulation.mp4', title: 'Fluid Simulation' },
+      { src: '/assets/Animation/Fluid/Fluidd0001-0150.mp4', title: 'Advanced Fluid' },
+      { src: '/assets/Animation/New Folder/01.mp4', title: 'New Animation' },
+      { src: '/assets/Animation/rings.mp4', title: 'Rings Animation' },
+      { src: '/assets/Animation/Smoke/fire_smoke2.mp4', title: 'Fire & Smoke 2' },
+      { src: '/assets/Animation/Smoke/smokeFire.mp4', title: 'Smoke Fire' },
+      { src: '/assets/Animation/Smoke/0001-0120.mp4', title: 'Smoke Study' },
+      { src: '/assets/Animation/floating_cube.mkv', title: 'Floating Cube' }
     ];setVideos(videoUrls);
   };  const loadArtwork = () => {
     console.log('Loading Artwork...');
     const artworkUrls = [
-      { src: 'assets/sketches/1.png' },
-      { src: 'assets/sketches/2.png' },
-      { src: 'assets/sketches/3.jpg' }, // Note: both 3.jpg and 3.png exist, using .jpg
-      { src: 'assets/sketches/4.png' },
-      { src: 'assets/sketches/5.png' },
-      { src: 'assets/sketches/6.png' },
-      { src: 'assets/sketches/7.png' },
-      { src: 'assets/sketches/8.png' },
-      { src: 'assets/sketches/9.png' },
-      { src: 'assets/sketches/10.png' },
-      { src: 'assets/sketches/11.png' },
-      { src: 'assets/sketches/12.png' },
-      { src: 'assets/sketches/13.jpg' },
-      { src: 'assets/sketches/14.jpg' },
-      { src: 'assets/sketches/15.jpg' },
-      { src: 'assets/sketches/16.png' },
-      { src: 'assets/sketches/17.jpg' },
-      { src: 'assets/sketches/18.jpg' },
-      { src: 'assets/sketches/19.jpg' },
-      { src: 'assets/sketches/20.jpg' },
-      { src: 'assets/sketches/21.jpg' },
-      { src: 'assets/sketches/22.jpg' },
-      { src: 'assets/sketches/23.jpg' },
-      { src: 'assets/sketches/24.jpg' },
-      { src: 'assets/sketches/25.jpg' },
-      { src: 'assets/sketches/26.jpg' },
-      { src: 'assets/sketches/27.jpg' },
-      { src: 'assets/sketches/28.jpg' },
-      { src: 'assets/sketches/29.jpg' },
-      { src: 'assets/sketches/30.jpg' },
-      { src: 'assets/sketches/31.jpg' },
-      { src: 'assets/sketches/32.jpg' }
+      { src: '/assets/sketches/1.png' },
+      { src: '/assets/sketches/2.png' },
+      { src: '/assets/sketches/3.jpg' }, // Note: both 3.jpg and 3.png exist, using .jpg
+      { src: '/assets/sketches/4.png' },
+      { src: '/assets/sketches/5.png' },
+      { src: '/assets/sketches/6.png' },
+      { src: '/assets/sketches/7.png' },
+      { src: '/assets/sketches/8.png' },
+      { src: '/assets/sketches/9.png' },
+      { src: '/assets/sketches/10.png' },
+      { src: '/assets/sketches/11.png' },
+      { src: '/assets/sketches/12.png' },
+      { src: '/assets/sketches/13.jpg' },
+      { src: '/assets/sketches/14.jpg' },
+      { src: '/assets/sketches/15.jpg' },
+      { src: '/assets/sketches/16.png' },
+      { src: '/assets/sketches/17.jpg' },
+      { src: '/assets/sketches/18.jpg' },
+      { src: '/assets/sketches/19.jpg' },
+      { src: '/assets/sketches/20.jpg' },
+      { src: '/assets/sketches/21.jpg' },
+      { src: '/assets/sketches/22.jpg' },
+      { src: '/assets/sketches/23.jpg' },
+      { src: '/assets/sketches/24.jpg' },
+      { src: '/assets/sketches/25.jpg' },
+      { src: '/assets/sketches/26.jpg' },
+      { src: '/assets/sketches/27.jpg' },
+      { src: '/assets/sketches/28.jpg' },
+      { src: '/assets/sketches/29.jpg' },
+      { src: '/assets/sketches/30.jpg' },
+      { src: '/assets/sketches/31.jpg' },
+      { src: '/assets/sketches/32.jpg' }
     ];
     setArtwork(artworkUrls);
   };
@@ -250,14 +240,14 @@ export default function App() {
       {/* Section Divider */}
       <div className="section-divider"></div>
       
-      {/* Unity Project Section */}
+      {/* Unity Project Section
       <section className="content-section unity-section">
         <div className="section-container">
           <div className="section-header">
             <h2 className="section-title">
               <img 
                 className="unity-logo" 
-                src='assets/images/unity.png' 
+                src='/assets/images/unity.png' 
                 alt="Unity Logo" 
               />
               Unity WebGL Project
@@ -283,10 +273,10 @@ export default function App() {
       </section>
 
       {/* Section Divider */}
-      <div className="section-divider"></div>
+      {/* <div className="section-divider"></div>
 
       {/* Unreal Engine Section */}
-      <section className="content-section unreal-section">
+      {/* <section className="content-section unreal-section">
         <div className="section-container">
           <div className="section-header">
             <h2 className="section-title">Unreal Engine MetaHuman</h2>
@@ -303,11 +293,11 @@ export default function App() {
               </div>
             </div>
             <div className="video-container">
-              <video className="video-placeholder" src="assets/metahuman.mp4" controls poster="assets/images/metahuman-poster.jpg" />
+              <video className="video-placeholder" src="/assets/metahuman.mp4" controls poster="/assets/images/metahuman-poster.jpg" />
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer Section */}
       <footer className="footer-section">
