@@ -128,12 +128,6 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
                 src={item.src}
                 loading="lazy"
               />
-              {showOverlay && (
-                <div className="model-info">
-                  <h3>{item.title}</h3>
-                  <p>by {item.author}</p>
-                </div>
-              )}
             </div>
           </div>
         );
@@ -149,12 +143,6 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
                 decoding="async"
                 fetchpriority={index === 0 ? "high" : "auto"}
               />
-              <div className="expand-icon">🔍</div>
-              {showOverlay && item.title && (
-                <div className="image-overlay">
-                  <h3>{item.title}</h3>
-                </div>
-              )}
             </div>
           </div>
         );
@@ -173,12 +161,6 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
                 <source src={item.src || item} type="video/ogg" />
                 Your browser does not support the video tag.
               </video>
-              <div className="expand-icon video-expand" onClick={toggleExpanded}>🔍</div>
-              {showOverlay && item.title && (
-                <div className="video-overlay">
-                  <h3>{item.title}</h3>
-                </div>
-              )}
             </div>
           </div>
         );
@@ -186,7 +168,7 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
       default:
         return null;
     }
-  }, [type, showOverlay, toggleExpanded]);if (!items || items.length === 0) {
+  }, [type, toggleExpanded]);if (!items || items.length === 0) {
     return <div className="carousel-empty">No items to display</div>;
   }return (
     <>
