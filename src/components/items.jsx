@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './items.scss';
 import Carousel from './Carousel';
+import Gallery from './Gallery';
 
 export default function App() {
   const [images, setImages] = useState([]);
@@ -177,12 +178,8 @@ export default function App() {
             </button>
           </div>
           {isImagesOpen && (
-            <div className="carousel-wrapper">
-              <Carousel 
-                items={images} 
-                type="images" 
-                title="Renders Collection"
-              />
+            <div className="gallery-wrapper">
+              <Gallery items={images} />
             </div>
           )}
         </div>
@@ -225,13 +222,8 @@ export default function App() {
               {isArtworkOpen ? 'Hide Artwork' : 'Show Artwork'}
             </button>
           </div>          {isArtworkOpen && (
-            <div className="carousel-wrapper">
-              <Carousel 
-                items={artwork} 
-                type="images" 
-                title="Artwork Collection"
-                showOverlay={false}
-              />
+            <div className="gallery-wrapper">
+              <Gallery items={artwork} />
             </div>
           )}
         </div>
