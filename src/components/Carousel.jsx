@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import './Carousel.scss';
+import { LazyImage, LazyVideo } from './LazyMedia';
 
 const Carousel = ({ items, type, title, showOverlay = true }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -53,7 +54,7 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
         [nextIndex, prevIndex].forEach(index => {
           if (type === 'images') {
             const img = new Image();
-            img.src = items[index]?.src || items[index];
+            img.src = (items[index]?.src || items[index]);
           }
         });
       };
@@ -111,7 +112,11 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
 
   const toggleExpanded = useCallback(() => {
     setIsExpanded(!isExpanded);
-  }, [isExpanded]);  const renderItem = useCallback((item, index) => {
+  }, [isExpanded]);
+
+  const cdnBase = useMemo(() => process.env.REACT_APP_ASSET_BASE_URL || '', []);
+
+  const renderItem = useCallback((item, index) => {
     switch (type) {
       case 'models':
         return (
@@ -136,12 +141,10 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
         return (
           <div className="carousel-item image-item" key={index}>
             <div className="image-container" onClick={toggleExpanded}>
-              <img 
-                src={item.src || item} 
+              <LazyImage
+                src={`${cdnBase}${item.src || item}`}
                 alt={item.title || `Image ${index + 1}`}
-                loading={index === 0 ? "eager" : "lazy"}
-                decoding="async"
-                fetchpriority={index === 0 ? "high" : "auto"}
+                eager={index === 0}
               />
             </div>
           </div>
@@ -151,16 +154,13 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
         return (
           <div className="carousel-item video-item" key={index}>
             <div className="video-container">
-              <video 
-                controls 
-                preload="metadata"
+              <LazyVideo
                 onClick={toggleExpanded}
-              >
-                <source src={item.src || item} type="video/mp4" />
-                <source src={item.src || item} type="video/webm" />
-                <source src={item.src || item} type="video/ogg" />
-                Your browser does not support the video tag.
-              </video>
+                sources={[
+                  { src: `${cdnBase}${item.src || item}`, type: 'video/mp4' },
+                ]}
+                preload="metadata"
+              />
             </div>
           </div>
         );
@@ -168,9 +168,13 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
       default:
         return null;
     }
-  }, [type, toggleExpanded]);if (!items || items.length === 0) {
+  }, [type, toggleExpanded, cdnBase]);
+
+  if (!items || items.length === 0) {
     return <div className="carousel-empty">No items to display</div>;
-  }return (
+  }
+
+  return (
     <>
       <div className="carousel-container" ref={carouselRef}>
         <div className="carousel-header">
@@ -200,7 +204,8 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
             <span>❮</span>
           </button>
 
-          <div className="carousel-track-container">            <div 
+          <div className="carousel-track-container">
+            <div 
               className="carousel-track"
               style={{
                 transform: `translateX(-${currentIndex * 100}%)`,
@@ -234,12 +239,12 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
               onClick={() => goToSlide(index)}
             >
               {type === 'images' && (
-                <img src={item.src || item} alt={`Thumbnail ${index + 1}`} />
+                <img src={`${cdnBase}${item.src || item}`} alt={`Thumbnail ${index + 1}`} loading="lazy" decoding="async" />
               )}
               {type === 'videos' && (
                 <div className="video-thumbnail">
-                  <video muted>
-                    <source src={item.src || item} type="video/mp4" />
+                  <video muted preload="none">
+                    <source src={`${cdnBase}${item.src || item}`} type="video/mp4" />
                   </video>
                   <div className="play-icon">▶️</div>
                 </div>
@@ -272,21 +277,23 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
                 ❮
               </button>
               
-              <div className="expanded-item">
+            <div className="expanded-item">
                 {type === 'images' && (
                   <img 
-                    src={items[currentIndex]?.src || items[currentIndex]} 
+                    src={`${cdnBase}${items[currentIndex]?.src || items[currentIndex]}`}
                     alt={items[currentIndex]?.title || `Image ${currentIndex + 1}`}
                     className="expanded-image"
+                    loading="eager"
+                    decoding="async"
                   />
                 )}
                 {type === 'videos' && (
                   <video 
                     controls 
                     className="expanded-video"
-                    poster={items[currentIndex]?.poster}
+                    poster={items[currentIndex]?.poster && `${cdnBase}${items[currentIndex].poster}`}
                   >
-                    <source src={items[currentIndex]?.src || items[currentIndex]} type="video/mp4" />
+                    <source src={`${cdnBase}${items[currentIndex]?.src || items[currentIndex]}`} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                 )}
@@ -318,12 +325,12 @@ const Carousel = ({ items, type, title, showOverlay = true }) => {
                   onClick={() => goToSlide(index)}
                 >
                   {type === 'images' && (
-                    <img src={item.src || item} alt={`Thumbnail ${index + 1}`} />
+                    <img src={`${cdnBase}${item.src || item}`} alt={`Thumbnail ${index + 1}`} loading="lazy" decoding="async" />
                   )}
                   {type === 'videos' && (
                     <div className="video-thumbnail-small">
-                      <video muted>
-                        <source src={item.src || item} type="video/mp4" />
+                      <video muted preload="none">
+                        <source src={`${cdnBase}${item.src || item}`} type="video/mp4" />
                       </video>
                     </div>
                   )}

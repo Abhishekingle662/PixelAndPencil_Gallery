@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './items.scss';
-import Carousel from './Carousel';
+import VideoGrid from './VideoGrid';
 import Gallery from './Gallery';
 
 export default function App() {
@@ -20,6 +20,9 @@ export default function App() {
     loadVideos();
     loadArtwork();
   }, []);
+
+  const assetBase = useMemo(() => process.env.REACT_APP_ASSET_BASE_URL || '', []);
+
   const loadImages = () => {
     console.log('Loading Images...');
     const imageUrls = [
@@ -46,7 +49,9 @@ export default function App() {
       { src: '/assets/images/untitvbled.png', title: 'Artistic Creation' }
     ];
     setImages(imageUrls);
-  };const loadVideos = () => {
+  };
+
+  const loadVideos = () => {
     console.log('Loading Videos...');
     const videoUrls = [
       { src: '/assets/Animation/looping animation.mp4', title: 'Looping Animation' },
@@ -65,8 +70,11 @@ export default function App() {
       { src: '/assets/Animation/Smoke/smokeFire.mp4', title: 'Smoke Fire' },
       { src: '/assets/Animation/Smoke/0001-0120.mp4', title: 'Smoke Study' },
       { src: '/assets/Animation/floating_cube.mkv', title: 'Floating Cube' }
-    ];setVideos(videoUrls);
-  };  const loadArtwork = () => {
+    ];
+    setVideos(videoUrls);
+  };
+
+  const loadArtwork = () => {
     console.log('Loading Artwork...');
     const artworkUrls = [
       { src: '/assets/sketches/1.png' },
@@ -199,15 +207,12 @@ export default function App() {
             </button>
           </div>
           {isVideosOpen && (
-            <div className="carousel-wrapper">
-              <Carousel 
-                items={videos} 
-                type="videos" 
-                title="Animations Collection"
-              />
+            <div className="video-grid-wrapper">
+              <VideoGrid items={videos} />
             </div>
           )}
-        </div>      </section>
+        </div>
+      </section>
 
       {/* Section Divider */}
       <div className="section-divider"></div>

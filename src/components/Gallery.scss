@@ -1,22 +1,25 @@
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
   perspective: 1200px;
   margin: 2rem 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }
 .gallery-card {
   background: #181a2b;
   border-radius: 1.2rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
   transform: rotateY(-8deg) scale(0.98);
   transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
   cursor: pointer;
   will-change: transform;
   overflow: hidden;
+  padding: 0.5rem;
   &:hover {
-    transform: rotateY(0deg) scale(1.04) translateZ(16px);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.28);
+    transform: rotateY(0deg) scale(1.03) translateZ(8px);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.24);
     z-index: 2;
   }
   img {
@@ -43,6 +46,25 @@
   animation: fadeIn 0.2s;
 }
 
+// Lazy skeleton for placeholder
+.lazy-media-wrapper {
+  display: block;
+}
+
+.lazy-skeleton {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 1.2rem;
+  background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.12) 37%, rgba(255,255,255,0.06) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
 .gallery-expanded-content {
   position: relative;
   max-width: 90vw;
@@ -50,6 +72,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
 }
 
 .gallery-expanded-image {
