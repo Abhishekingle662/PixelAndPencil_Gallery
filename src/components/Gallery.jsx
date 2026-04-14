@@ -74,43 +74,53 @@ const Gallery = ({ items, masonry = false }) => {
             className="gallery-expanded-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              className="gallery-close-btn"
-              onClick={handleClose}
-              aria-label="Close image viewer"
-            >
-              ✕
-            </button>
+            {/* Top bar — close button, always visible, never overlaps image */}
+            <div className="gallery-modal-topbar">
+              <button
+                className="gallery-close-btn"
+                onClick={handleClose}
+                aria-label="Close image viewer"
+              >
+                ✕
+              </button>
+            </div>
 
-            <button
-              className="gallery-nav-btn gallery-nav-btn--prev"
-              onClick={handlePrev}
-              aria-label="Previous image"
-            >
-              ❮
-            </button>
+            {/* Image row — nav buttons flank the image, all within viewport */}
+            <div className="gallery-modal-image-row">
+              <button
+                className="gallery-nav-btn"
+                onClick={handlePrev}
+                aria-label="Previous image"
+              >
+                ❮
+              </button>
 
-            <LazyImage
-              src={`${cdnBase}${items[expandedIndex].src}`}
-              fallback={items[expandedIndex].fallback ? `${cdnBase}${items[expandedIndex].fallback}` : undefined}
-              alt={items[expandedIndex].title || `Artwork ${expandedIndex + 1}`}
-              className="gallery-expanded-image"
-              eager
-            />
+              <div className="gallery-modal-image-wrap">
+                <LazyImage
+                  src={`${cdnBase}${items[expandedIndex].src}`}
+                  fallback={items[expandedIndex].fallback ? `${cdnBase}${items[expandedIndex].fallback}` : undefined}
+                  alt={items[expandedIndex].title || `Artwork ${expandedIndex + 1}`}
+                  eager
+                />
+              </div>
 
-            <button
-              className="gallery-nav-btn gallery-nav-btn--next"
-              onClick={handleNext}
-              aria-label="Next image"
-            >
-              ❯
-            </button>
+              <button
+                className="gallery-nav-btn"
+                onClick={handleNext}
+                aria-label="Next image"
+              >
+                ❯
+              </button>
+            </div>
 
-            {items[expandedIndex].title && (
-              <div className="gallery-expanded-title">{items[expandedIndex].title}</div>
-            )}
-            <div className="gallery-expanded-counter">
-              {expandedIndex + 1} / {items.length}
+            {/* Meta — title + counter below image */}
+            <div className="gallery-modal-meta">
+              {items[expandedIndex].title && (
+                <div className="gallery-expanded-title">{items[expandedIndex].title}</div>
+              )}
+              <div className="gallery-expanded-counter">
+                {expandedIndex + 1} / {items.length}
+              </div>
             </div>
           </div>
         </div>

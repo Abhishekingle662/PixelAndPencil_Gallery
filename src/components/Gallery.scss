@@ -130,35 +130,97 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
   animation: fadeIn 0.2s ease;
+  // Prevent the backdrop itself from scroll
+  overflow: hidden;
 }
 
+// Outer shell — never exceeds the viewport
 .gallery-expanded-content {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 92vw;
-  max-height: 92vh;
-  gap: 0.75rem;
+  // Reserve space for close button (2.4rem) + gap above image
+  width: min(92vw, 1100px);
+  max-height: calc(100vh - 2rem);
+  gap: 0.5rem;
 }
 
-.gallery-expanded-image {
-  // LazyImage wraps in <picture> — target the inner img
-  picture,
-  picture img {
-    max-width: 88vw;
-    max-height: 80vh;
+// Top bar: close button sits inline so it never overlaps the image
+.gallery-modal-topbar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+// Image row: nav buttons + image side-by-side, all within the viewport
+.gallery-modal-image-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  // The row itself must not overflow vertically
+  // Reserve: topbar ~2.4rem + gap + meta ~2.5rem + gap + padding = ~7rem
+  max-height: calc(100vh - 9rem);
+  flex-shrink: 0;
+}
+
+// The image wrapper — fills available space without overflowing
+.gallery-modal-image-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: calc(100vh - 9rem);
+  overflow: hidden;
+
+  // LazyImage renders a .lazy-media-wrapper > picture > img
+  .lazy-media-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    max-height: calc(100vh - 9rem);
+  }
+
+  picture {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    max-height: calc(100vh - 9rem);
+  }
+
+  img {
+    display: block;
+    // Never wider than the available column, never taller than the row budget
+    max-width: 100%;
+    max-height: calc(100vh - 9rem);
+    width: auto;
+    height: auto;
+    object-fit: contain;
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-modal);
-    object-fit: contain;
-    display: block;
   }
+}
+
+// Meta row: title + counter
+.gallery-modal-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
 }
 
 .gallery-expanded-title {
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 500;
   text-align: center;
   letter-spacing: 0.03em;
@@ -166,54 +228,51 @@
 
 .gallery-expanded-counter {
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
 }
 
 // ── Modal buttons ─────────────────────────────────────────────────────────────
 
 .gallery-close-btn {
-  position: absolute;
-  top: -2.5rem;
-  right: 0;
   background: rgba(30, 32, 50, 0.85);
   color: #fff;
   border-radius: 50%;
   width: 2.4rem;
   height: 2.4rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background var(--transition-fast);
-  z-index: 10;
+  flex-shrink: 0;
 
   &:hover { background: #e94560; }
 }
 
 .gallery-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
   background: rgba(30, 32, 50, 0.75);
   color: #fff;
   border-radius: 50%;
-  width: 2.8rem;
-  height: 2.8rem;
-  font-size: 1.1rem;
+  // Fixed size — never shrinks on small screens
+  width: 2.6rem;
+  height: 2.6rem;
+  min-width: 2.6rem;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background var(--transition-fast), transform var(--transition-fast);
+  flex-shrink: 0;
   z-index: 10;
 
-  &:hover { background: var(--accent-dim); transform: translateY(-50%) scale(1.1); }
+  &:hover { background: var(--accent-dim); transform: scale(1.1); }
 
-  &--prev { left: -3.5rem; }
-  &--next { right: -3.5rem; }
-
-  @media (max-width: 700px) {
-    &--prev { left: -2rem; }
-    &--next { right: -2rem; }
+  // On very small screens collapse to smaller buttons
+  @media (max-width: 400px) {
+    width: 2rem;
+    height: 2rem;
+    min-width: 2rem;
+    font-size: 0.8rem;
   }
 }
 

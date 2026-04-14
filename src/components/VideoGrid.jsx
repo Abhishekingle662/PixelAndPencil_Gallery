@@ -76,50 +76,61 @@ const VideoGrid = ({ items = [] }) => {
           aria-modal="true"
           aria-label={items[expandedIndex]?.title || 'Video player'}
         >
-          <div className="video-modal-content">
-            <button
-              className="video-modal-close"
-              onClick={closeModal}
-              aria-label="Close video player"
-            >
-              ✕
-            </button>
+          <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
+            {/* Top bar — close button always above the player */}
+            <div className="video-modal-topbar">
+              <button
+                className="video-modal-close"
+                onClick={closeModal}
+                aria-label="Close video player"
+              >
+                ✕
+              </button>
+            </div>
 
-            <button
-              className="video-modal-nav video-modal-nav--prev"
-              onClick={handlePrev}
-              aria-label="Previous video"
-            >
-              ❮
-            </button>
+            {/* Player row — nav buttons flank the video */}
+            <div className="video-modal-player-row">
+              <button
+                className="video-modal-nav"
+                onClick={handlePrev}
+                aria-label="Previous video"
+              >
+                ❮
+              </button>
 
-            <video
-              className="video-modal-player"
-              controls
-              autoPlay
-              key={expandedIndex}
-              poster={items[expandedIndex]?.poster ? `${cdnBase}${items[expandedIndex].poster}` : undefined}
-            >
-              <source
-                src={`${cdnBase}${items[expandedIndex]?.src || items[expandedIndex]}`}
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
+              <div className="video-modal-player-wrap">
+                <video
+                  className="video-modal-player"
+                  controls
+                  autoPlay
+                  key={expandedIndex}
+                  poster={items[expandedIndex]?.poster ? `${cdnBase}${items[expandedIndex].poster}` : undefined}
+                >
+                  <source
+                    src={`${cdnBase}${items[expandedIndex]?.src || items[expandedIndex]}`}
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
 
-            <button
-              className="video-modal-nav video-modal-nav--next"
-              onClick={handleNext}
-              aria-label="Next video"
-            >
-              ❯
-            </button>
+              <button
+                className="video-modal-nav"
+                onClick={handleNext}
+                aria-label="Next video"
+              >
+                ❯
+              </button>
+            </div>
 
-            {items[expandedIndex]?.title && (
-              <div className="video-modal-title">{items[expandedIndex].title}</div>
-            )}
-            <div className="video-modal-counter">
-              {expandedIndex + 1} / {items.length}
+            {/* Meta — title + counter below player */}
+            <div className="video-modal-meta">
+              {items[expandedIndex]?.title && (
+                <div className="video-modal-title">{items[expandedIndex].title}</div>
+              )}
+              <div className="video-modal-counter">
+                {expandedIndex + 1} / {items.length}
+              </div>
             </div>
           </div>
         </div>
