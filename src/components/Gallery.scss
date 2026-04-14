@@ -1,108 +1,223 @@
+// ── Gallery Grid ──────────────────────────────────────────────────────────────
+
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2.5rem;
-  perspective: 1200px;
-  margin: 2rem 0;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
   content-visibility: auto;
   contain-intrinsic-size: auto 900px;
-}
-.gallery-card {
-  background: #181a2b;
-  border-radius: 1.2rem;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-  transform: rotateY(-8deg) scale(0.98);
-  transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
-  cursor: pointer;
-  will-change: transform;
-  overflow: hidden;
-  padding: 0.5rem;
-  &:hover {
-    transform: rotateY(0deg) scale(1.03) translateZ(8px);
-    box-shadow: 0 16px 36px rgba(0,0,0,0.24);
-    z-index: 2;
-  }
-  img {
-    width: 100%;
-    border-radius: 1.2rem;
+
+  // Masonry variant for sketches (portrait-heavy content)
+  &--masonry {
     display: block;
-    object-fit: cover;
-    aspect-ratio: 4/3;
-    transition: filter 0.2s;
-    filter: brightness(0.98) contrast(1.05);
-    &:hover {
-      filter: brightness(1.05) contrast(1.1);
+    columns: 3;
+    column-gap: 1.5rem;
+
+    @media (max-width: 900px) { columns: 2; }
+    @media (max-width: 500px) { columns: 1; }
+
+    .gallery-card {
+      break-inside: avoid;
+      margin-bottom: 1.5rem;
+      transform: none;
+
+      picture img,
+      picture source + img {
+        aspect-ratio: unset;
+        height: auto;
+      }
     }
   }
 }
-.gallery-expanded-modal {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(10, 12, 24, 0.92);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.2s;
+
+// ── Gallery Card ──────────────────────────────────────────────────────────────
+
+.gallery-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  cursor: pointer;
+  will-change: transform;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    outline: none;
+
+    .gallery-card__title {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  picture {
+    display: block;
+    width: 100%;
+  }
+
+  picture img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-card);
+    transition: filter var(--transition-fast);
+    filter: brightness(0.97) contrast(1.03);
+  }
+
+  &:hover picture img {
+    filter: brightness(1.04) contrast(1.06);
+  }
 }
 
-// Lazy skeleton for placeholder
+// Title overlay — slides up on hover
+.gallery-card__title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem 0.9rem 0.75rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+  pointer-events: none;
+}
+
+// ── Lazy skeleton ─────────────────────────────────────────────────────────────
+
 .lazy-media-wrapper {
   display: block;
+  width: 100%;
 }
 
 .lazy-skeleton {
   width: 100%;
-  aspect-ratio: 4/3;
-  border-radius: 1.2rem;
-  background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.12) 37%, rgba(255,255,255,0.06) 63%);
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.09) 37%,
+    rgba(255, 255, 255, 0.04) 63%
+  );
   background-size: 400% 100%;
-  animation: shimmer 1.2s ease-in-out infinite;
+  animation: shimmer 1.4s ease-in-out infinite;
 }
 
 @keyframes shimmer {
-  0% { background-position: 100% 0; }
+  0%   { background-position: 100% 0; }
   100% { background-position: -100% 0; }
+}
+
+// ── Expanded Modal ────────────────────────────────────────────────────────────
+
+.gallery-expanded-modal {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-modal);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
 }
 
 .gallery-expanded-content {
   position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 1rem;
+  max-width: 92vw;
+  max-height: 92vh;
+  gap: 0.75rem;
 }
 
 .gallery-expanded-image {
-  max-width: 90vw;
-  max-height: 80vh;
-  border-radius: 1.2rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.28);
-  background: #181a2b;
+  // LazyImage wraps in <picture> — target the inner img
+  picture,
+  picture img {
+    max-width: 88vw;
+    max-height: 80vh;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-modal);
+    object-fit: contain;
+    display: block;
+  }
 }
+
+.gallery-expanded-title {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.gallery-expanded-counter {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+// ── Modal buttons ─────────────────────────────────────────────────────────────
 
 .gallery-close-btn {
   position: absolute;
-  top: 1.2rem;
-  right: 1.2rem;
-  background: rgba(30,32,50,0.8);
+  top: -2.5rem;
+  right: 0;
+  background: rgba(30, 32, 50, 0.85);
   color: #fff;
-  border: none;
   border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
-  font-size: 1.5rem;
-  cursor: pointer;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
   z-index: 10;
-  transition: background 0.2s;
+
+  &:hover { background: #e94560; }
 }
-.gallery-close-btn:hover {
-  background: #e94560;
+
+.gallery-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(30, 32, 50, 0.75);
+  color: #fff;
+  border-radius: 50%;
+  width: 2.8rem;
+  height: 2.8rem;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  z-index: 10;
+
+  &:hover { background: var(--accent-dim); transform: translateY(-50%) scale(1.1); }
+
+  &--prev { left: -3.5rem; }
+  &--next { right: -3.5rem; }
+
+  @media (max-width: 700px) {
+    &--prev { left: -2rem; }
+    &--next { right: -2rem; }
+  }
 }
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }

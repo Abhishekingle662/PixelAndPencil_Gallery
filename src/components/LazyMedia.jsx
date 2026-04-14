@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-// Simple IntersectionObserver hook
+// Stable option objects — defined outside components to prevent
+// useEffect re-runs caused by new object references on every render.
+const IMAGE_IO_OPTIONS = { rootMargin: '200px' };
+const VIDEO_IO_OPTIONS = { rootMargin: '400px' };
+
 function useIntersectionObserver(options) {
   const targetRef = useRef(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
@@ -8,24 +12,23 @@ function useIntersectionObserver(options) {
   useEffect(() => {
     const element = targetRef.current;
     if (!element) return;
-
     const observer = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      if (entry.isIntersecting) {
+      if (entries[0].isIntersecting) {
         setIsIntersecting(true);
         observer.disconnect();
       }
     }, options);
-
     observer.observe(element);
     return () => observer.disconnect();
-  }, [options]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { targetRef, isIntersecting };
 }
 
 export function LazyImage({
   src,
+  fallback,
   alt,
   className,
   sizes = '(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw',
@@ -33,10 +36,12 @@ export function LazyImage({
   onClick,
   style,
 }) {
-  const { targetRef, isIntersecting } = useIntersectionObserver({ rootMargin: '200px' });
+  const { targetRef, isIntersecting } = useIntersectionObserver(IMAGE_IO_OPTIONS);
   const [hasLoaded, setHasLoaded] = useState(false);
 
   const shouldLoad = eager || isIntersecting;
+  const webpSrc = src.endsWith('.webp') ? src : src.replace(/\.(png|jpg|jpeg)$/i, '.webp');
+  const fallbackSrc = fallback || src;
 
   return (
     <div
@@ -46,17 +51,20 @@ export function LazyImage({
       onClick={onClick}
     >
       {shouldLoad ? (
-        <img
-          src={src}
-          alt={alt}
-          className={className}
-          loading={eager ? 'eager' : 'lazy'}
-          decoding="async"
-          sizes={sizes}
-          onLoad={() => setHasLoaded(true)}
-        />
+        <picture>
+          <source srcSet={webpSrc} type="image/webp" />
+          <img
+            src={fallbackSrc}
+            alt={alt}
+            className={className}
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+            sizes={sizes}
+            onLoad={() => setHasLoaded(true)}
+          />
+        </picture>
       ) : (
-        <div className="lazy-skeleton" />
+        <div className="lazy-skeleton" aria-hidden="true" />
       )}
     </div>
   );
@@ -71,7 +79,7 @@ export function LazyVideo({
   onClick,
   style,
 }) {
-  const { targetRef, isIntersecting } = useIntersectionObserver({ rootMargin: '400px' });
+  const { targetRef, isIntersecting } = useIntersectionObserver(VIDEO_IO_OPTIONS);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -85,7 +93,7 @@ export function LazyVideo({
           className={className}
           controls={controls}
           preload={preload}
-          poster={poster}
+          poster={poster || undefined}
         >
           {sources.map((s, i) => (
             <source key={i} src={s.src} type={s.type} />
@@ -93,12 +101,19 @@ export function LazyVideo({
           Your browser does not support the video tag.
         </video>
       ) : (
-        <div className="lazy-skeleton" />
+        <div
+          className="lazy-skeleton"
+          aria-hidden="true"
+          style={
+            poster
+              ? { backgroundImage: `url(${poster})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+              : undefined
+          }
+        />
       )}
     </div>
   );
 }
 
-export default { LazyImage, LazyVideo };
-
-
+const LazyMedia = { LazyImage, LazyVideo };
+export default LazyMedia;
