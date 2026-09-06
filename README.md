@@ -1,12 +1,22 @@
-# Portfolio - Creative Works & Projects
+# Pixel & Pencil Gallery v2
 
-This project is a personal portfolio website designed to showcase a variety of creative works. It features sections for 3D art, traditional pencil sketches, and other computer graphics (CG) projects. The site serves as a digital gallery, allowing visitors to explore different artistic endeavors and technical skills.
+Rebuild of [PixelAndPencil_Gallery](https://github.com/Abhishekingle662/PixelAndPencil_Gallery).
 
-## Tech Stack
+## What changed
 
-- React 18
-- Three.js for 3D graphics
-- React P5 Wrapper for creative coding
-- FontAwesome icons
-- Sass for styling
+- CRA + Sass → Vite 7 + React 19 + TypeScript
+- No 172MB asset dump in the new repo — images load from the existing Vercel origin (`VITE_ASSET_BASE`)
+- WebP first, PNG/JPG fallback on error
+- Lazy images, `preload="none"` videos, hover-to-preview
+- Tag filters on renders, masonry on sketches
+- Keyboard lightbox (Esc / arrows)
+- Unity embed + Unreal progress kept from original data
 
+## Run
+
+```bash
+npm install
+npm run dev
+```
+
+Optional: copy optimized assets into `public/assets` and set `VITE_ASSET_BASE=` (empty) to serve locally.
